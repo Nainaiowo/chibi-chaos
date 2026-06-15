@@ -81,16 +81,6 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.Save();
     }
 
-    public void SetEnabled(bool enabled)
-    {
-        Configuration.Enabled = enabled;
-        SaveConfiguration();
-        if (!enabled)
-        {
-            RestoreScaledObjects();
-        }
-    }
-
     public void SetScale(float scale)
     {
         Configuration.ChaosScale = ClampScale(scale);
@@ -122,7 +112,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void RefreshAndApply()
     {
-        if (!Configuration.Enabled || ClientState.TerritoryType != ChaosTerritoryId)
+        if (ClientState.TerritoryType != ChaosTerritoryId)
         {
             RestoreScaledObjects();
             return;

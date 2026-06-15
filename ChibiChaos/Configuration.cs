@@ -6,9 +6,8 @@ namespace ChibiChaos;
 [Serializable]
 public sealed class Configuration : IPluginConfiguration
 {
-    public int Version { get; set; } = 2;
+    public int Version { get; set; } = 3;
 
-    public bool Enabled { get; set; } = true;
     public float ChaosScale { get; set; } = 0.55f;
 
     public void Save()

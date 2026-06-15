@@ -16,7 +16,7 @@ Open the configuration window in game:
 /chibichaos
 ```
 
-Use the window to enable or disable the plugin and adjust `Chaos scale`.
+Use the window to adjust `Chaos scale`. To turn Chibi Chaos off, disable the plugin in Dalamud.
 
 ## Dalamud Repository
 

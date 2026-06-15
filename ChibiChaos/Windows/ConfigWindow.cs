@@ -15,7 +15,7 @@ public sealed class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(420, 150);
+        Size = new Vector2(420, 120);
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
@@ -25,12 +25,6 @@ public sealed class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
-        var enabled = configuration.Enabled;
-        if (ImGui.Checkbox("Enabled", ref enabled))
-        {
-            plugin.SetEnabled(enabled);
-        }
-
         var scale = configuration.ChaosScale;
         if (ImGui.SliderFloat("Chaos scale", ref scale, 0.1f, 2.0f, "%.2f"))
         {

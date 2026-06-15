@@ -23,7 +23,7 @@ Use the window to enable or disable the plugin and adjust `Chaos scale`.
 Add this custom plugin repository URL in Dalamud:
 
 ```text
-https://raw.githubusercontent.com/Nainaiowo/chibi-chaos/main/repo.json
+https://raw.githubusercontent.com/Nainaiowo/chibi-chaos/refs/heads/main/repo.json
 ```
 
 Then install `Chibi Chaos` from Dalamud's plugin installer.

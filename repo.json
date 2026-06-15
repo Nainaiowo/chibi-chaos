@@ -3,7 +3,7 @@
     "Author": "Nainaiowo",
     "Name": "Chibi Chaos",
     "InternalName": "ChibiChaos",
-    "AssemblyVersion": "0.1.8.0",
+    "AssemblyVersion": "0.1.9.0",
     "Description": "Locally scales down Chaos in the configured encounter for visibility.",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/Nainaiowo/chibi-chaos",
@@ -24,6 +24,6 @@
     "DownloadLinkInstall": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
     "DownloadLinkTesting": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
     "DownloadLinkUpdate": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
-    "LastUpdate": 1781564019
+    "LastUpdate": 1781564836
   }
 ]

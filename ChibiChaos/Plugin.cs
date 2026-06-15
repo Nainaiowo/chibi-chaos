@@ -216,6 +216,11 @@ public sealed class Plugin : IDalamudPlugin
 
         foreach (var gameObject in ObjectTable)
         {
+            if (gameObject == null)
+            {
+                continue;
+            }
+
             seenObjectIds.Add(gameObject.GameObjectId);
             if (scaledObjectIdsThisScan.Contains(gameObject.GameObjectId)
                 || gameObject is not ICharacter character

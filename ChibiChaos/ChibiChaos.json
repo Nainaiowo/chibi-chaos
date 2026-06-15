@@ -1,0 +1,14 @@
+{
+  "Author": "Nainaiowo",
+  "Name": "Chibi Chaos",
+  "InternalName": "ChibiChaos",
+  "Punchline": "Scale down Chaos locally.",
+  "Description": "Locally scales down Chaos in the configured encounter for visibility. Use /chibichaos to adjust scale.",
+  "RepoUrl": "https://github.com/Nainaiowo/chibi-chaos",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "chaos",
+    "scale",
+    "ultimate"
+  ]
+}

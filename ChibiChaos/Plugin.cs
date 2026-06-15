@@ -147,15 +147,17 @@ public sealed class Plugin : IDalamudPlugin
 
     private unsafe bool IsConfiguredChaos(IGameObject gameObject, ICharacter character)
     {
-        if (gameObject is not IBattleNpc
-            || gameObject.BaseId != ChaosBaseId
-            || !string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase))
+        if (gameObject is not IBattleNpc)
         {
             return false;
         }
 
         var native = (Character*)character.Address;
-        return native != null && (uint)native->ModelContainer.ModelCharaId == ChaosModelCharaId;
+        var modelCharaIdMatches = native != null && (uint)native->ModelContainer.ModelCharaId == ChaosModelCharaId;
+        var baseIdMatches = gameObject.BaseId == ChaosBaseId;
+        var nameMatches = string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase);
+
+        return modelCharaIdMatches || baseIdMatches || nameMatches;
     }
 
     private unsafe void ApplyConfiguredScale(ICharacter character, float scale)

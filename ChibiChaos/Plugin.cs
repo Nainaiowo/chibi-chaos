@@ -20,6 +20,7 @@ public sealed class Plugin : IDalamudPlugin
     private const uint ChaosTerritoryId = 1363;
     private const uint ChaosModelCharaId = 5010;
     private const uint ChaosBaseId = 19508;
+    private const uint ChaosAlternateBaseId = 19507;
     private const string ChaosName = "Chaos";
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
@@ -154,7 +155,7 @@ public sealed class Plugin : IDalamudPlugin
 
         var native = (Character*)character.Address;
         var modelCharaIdMatches = native != null && (uint)native->ModelContainer.ModelCharaId == ChaosModelCharaId;
-        var baseIdMatches = gameObject.BaseId == ChaosBaseId;
+        var baseIdMatches = gameObject.BaseId == ChaosBaseId || gameObject.BaseId == ChaosAlternateBaseId;
         var nameMatches = string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase);
 
         return modelCharaIdMatches || baseIdMatches || nameMatches;

@@ -2,8 +2,8 @@
   "Author": "Nainaiowo",
   "Name": "Chibi Chaos",
   "InternalName": "ChibiChaos",
-  "Punchline": "Scale down Chaos locally.",
-  "Description": "Locally scales down Chaos in the configured encounter for visibility. Use /chibichaos to adjust scale.",
+  "Punchline": "Scale down Chaos",
+  "Description": "Scales down Chaos in DMU for visibility.",
   "RepoUrl": "https://github.com/Nainaiowo/chibi-chaos",
   "ApplicableVersion": "any",
   "Tags": [

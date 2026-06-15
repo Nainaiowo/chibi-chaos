@@ -3,8 +3,8 @@
     "Author": "Nainaiowo",
     "Name": "Chibi Chaos",
     "InternalName": "ChibiChaos",
-    "AssemblyVersion": "0.1.10.0",
-    "Description": "Locally scales down Chaos in the configured encounter for visibility.",
+    "AssemblyVersion": "0.1.11.0",
+    "Description": "Scales down Chaos in DMU for visibility.",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/Nainaiowo/chibi-chaos",
     "Tags": [
@@ -17,13 +17,13 @@
     "LoadSync": false,
     "CanUnloadAsync": false,
     "LoadPriority": 0,
-    "Punchline": "Scale down Chaos locally.",
+    "Punchline": "Scale down Chaos",
     "AcceptsFeedback": true,
     "IsHide": false,
     "IsTestingExclusive": false,
     "DownloadLinkInstall": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
     "DownloadLinkTesting": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
     "DownloadLinkUpdate": "https://github.com/Nainaiowo/chibi-chaos/releases/latest/download/latest.zip",
-    "LastUpdate": 1781565873
+    "LastUpdate": 1781566690
   }
 ]

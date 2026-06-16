@@ -15,7 +15,7 @@ public sealed class ConfigWindow : Window, IDisposable
         this.plugin = plugin;
         configuration = plugin.Configuration;
 
-        Size = new Vector2(420, 120);
+        Size = new Vector2(420, 160);
         SizeCondition = ImGuiCond.FirstUseEver;
     }
 
@@ -31,13 +31,20 @@ public sealed class ConfigWindow : Window, IDisposable
             plugin.SetScale(scale);
         }
 
+        var exdeathScale = configuration.ExdeathScale;
+        if (ImGui.SliderFloat("Exdeath scale", ref exdeathScale, 0.1f, 2.0f, "%.2f"))
+        {
+            plugin.SetExdeathScale(exdeathScale);
+        }
+
         var debugChat = configuration.DebugChat;
         if (ImGui.Checkbox("Debug chat", ref debugChat))
         {
             plugin.SetDebugChat(debugChat);
         }
 
-        ImGui.TextWrapped($"Scale percent: {MathF.Round(configuration.ChaosScale * 100.0f)}%");
-        ImGui.TextWrapped("Scale changes may require a wipe or instance re-entry before the already-loaded Chaos model refreshes.");
+        ImGui.TextWrapped($"Chaos scale percent: {MathF.Round(configuration.ChaosScale * 100.0f)}%");
+        ImGui.TextWrapped($"Exdeath scale percent: {MathF.Round(configuration.ExdeathScale * 100.0f)}%");
+        ImGui.TextWrapped("Scale changes may require a wipe or instance re-entry before already-loaded boss models refresh.");
     }
 }

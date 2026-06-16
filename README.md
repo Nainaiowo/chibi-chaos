@@ -2,7 +2,7 @@
 
 Chibi Chaos is a Dalamud plugin that scales down Chaos in DMU for visibility.
 
-Scale changes may not refresh on an already-loaded boss model. If Chaos is already present, wipe the pull or re-enter/restart the instance so the boss actor/model is recreated.
+Scale changes may not refresh on an already-loaded boss model. If a boss is already present, wipe the pull or re-enter/restart the instance so the boss actor/model is recreated.
 
 ## Configuration
 
@@ -12,7 +12,7 @@ Open the configuration window in game:
 /chibichaos
 ```
 
-Use the window to adjust `Chaos scale`. To turn Chibi Chaos off, disable the plugin in Dalamud.
+Use the window to adjust `Chaos scale` and `Exdeath scale`. To turn Chibi Chaos off, disable the plugin in Dalamud.
 
 ## Dalamud Repository
 

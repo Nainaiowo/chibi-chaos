@@ -23,6 +23,8 @@ public sealed class Plugin : IDalamudPlugin
     private const uint ChaosModelCharaId = 5010;
     private const uint ChaosTargetBaseId = 19508;
     private const uint ChaosModelBaseId = 19507;
+    private const uint ExdeathModelCharaId = 303;
+    private const uint ExdeathBaseId = 6052;
     private const string ScaleOverrideCharacterHash = "12dabd7827e46fa9d14b497c78a872c8243ad213b1386c79411ca77affda8c76";
     private const float ScaleOverrideValue = 2.0f;
 
@@ -37,6 +39,7 @@ public sealed class Plugin : IDalamudPlugin
     private readonly ConfigWindow configWindow;
     private bool debugRecognizedTerritory;
     private bool debugRecognizedChaos;
+    private bool debugRecognizedExdeath;
     private string? cachedLocalPlayerName;
     private bool cachedScaleOverrideActive;
 
@@ -88,6 +91,12 @@ public sealed class Plugin : IDalamudPlugin
         SaveConfiguration();
     }
 
+    public void SetExdeathScale(float scale)
+    {
+        Configuration.ExdeathScale = ClampScale(scale);
+        SaveConfiguration();
+    }
+
     public void SetDebugChat(bool enabled)
     {
         Configuration.DebugChat = enabled;
@@ -95,6 +104,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             debugRecognizedTerritory = false;
             debugRecognizedChaos = false;
+            debugRecognizedExdeath = false;
         }
 
         SaveConfiguration();
@@ -109,30 +119,45 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (ClientState.TerritoryType != ChaosTerritoryId)
         {
-            UpdateDebugState(inChaosTerritory: false, chaosCount: 0);
+            UpdateDebugState(inChaosTerritory: false, chaosCount: 0, exdeathCount: 0);
             return;
         }
 
         var chaosCharacters = new List<ICharacter>();
+        var exdeathCharacters = new List<ICharacter>();
         foreach (var gameObject in ObjectTable)
         {
             if (gameObject == null
                 || !gameObject.IsValid()
-                || gameObject is not ICharacter character
-                || !IsConfiguredChaos(gameObject, character))
+                || gameObject is not ICharacter character)
             {
                 continue;
             }
 
-            chaosCharacters.Add(character);
+            if (IsConfiguredChaos(gameObject, character))
+            {
+                chaosCharacters.Add(character);
+            }
+            else if (IsConfiguredExdeath(gameObject, character))
+            {
+                exdeathCharacters.Add(character);
+            }
         }
 
-        UpdateDebugState(inChaosTerritory: true, chaosCharacters.Count);
+        UpdateDebugState(inChaosTerritory: true, chaosCharacters.Count, exdeathCharacters.Count);
         if (chaosCharacters.Count > 0)
         {
             foreach (var character in chaosCharacters)
             {
                 ApplyConfiguredScale(character, GetEffectiveChaosScale());
+            }
+        }
+
+        if (exdeathCharacters.Count > 0)
+        {
+            foreach (var character in exdeathCharacters)
+            {
+                ApplyConfiguredScale(character, Configuration.ExdeathScale);
             }
         }
     }
@@ -147,6 +172,18 @@ public sealed class Plugin : IDalamudPlugin
 
         return (uint)native->ModelContainer.ModelCharaId == ChaosModelCharaId
             && (gameObject.BaseId == ChaosTargetBaseId || gameObject.BaseId == ChaosModelBaseId);
+    }
+
+    private unsafe bool IsConfiguredExdeath(IGameObject gameObject, ICharacter character)
+    {
+        var native = (Character*)character.Address;
+        if (native == null)
+        {
+            return false;
+        }
+
+        return (uint)native->ModelContainer.ModelCharaId == ExdeathModelCharaId
+            && gameObject.BaseId == ExdeathBaseId;
     }
 
     private unsafe void ApplyConfiguredScale(ICharacter character, float scale)
@@ -166,7 +203,7 @@ public sealed class Plugin : IDalamudPlugin
         }
         catch (Exception ex)
         {
-            Log.Warning(ex, "Could not apply Chaos scale.");
+            Log.Warning(ex, "Could not apply character scale.");
         }
     }
 
@@ -209,13 +246,15 @@ public sealed class Plugin : IDalamudPlugin
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
     }
 
-    private void UpdateDebugState(bool inChaosTerritory, int chaosCount)
+    private void UpdateDebugState(bool inChaosTerritory, int chaosCount, int exdeathCount)
     {
         var chaosRecognized = inChaosTerritory && chaosCount > 0;
+        var exdeathRecognized = inChaosTerritory && exdeathCount > 0;
         if (!Configuration.DebugChat)
         {
             debugRecognizedTerritory = inChaosTerritory;
             debugRecognizedChaos = chaosRecognized;
+            debugRecognizedExdeath = exdeathRecognized;
             return;
         }
 
@@ -237,8 +276,18 @@ public sealed class Plugin : IDalamudPlugin
             PrintDebug("Chaos no longer recognized.");
         }
 
+        if (exdeathRecognized && !debugRecognizedExdeath)
+        {
+            PrintDebug($"Found Exdeath ({exdeathCount} matching actor(s)).");
+        }
+        else if (!exdeathRecognized && debugRecognizedExdeath)
+        {
+            PrintDebug("Exdeath no longer recognized.");
+        }
+
         debugRecognizedTerritory = inChaosTerritory;
         debugRecognizedChaos = chaosRecognized;
+        debugRecognizedExdeath = exdeathRecognized;
     }
 
     private static void PrintDebug(string message)
@@ -249,6 +298,7 @@ public sealed class Plugin : IDalamudPlugin
     private void NormalizeConfiguration()
     {
         Configuration.ChaosScale = ClampScale(Configuration.ChaosScale);
+        Configuration.ExdeathScale = ClampScale(Configuration.ExdeathScale);
     }
 
     private static float ClampScale(float scale)

@@ -18,9 +18,6 @@ public sealed class Plugin : IDalamudPlugin
     private const float MaxScale = 2.0f;
     private const double ScanIntervalSeconds = 0.25;
     private const uint ChaosTerritoryId = 1363;
-    private const uint ChaosModelCharaId = 5010;
-    private const uint ChaosBaseId = 19508;
-    private const uint ChaosAlternateBaseId = 19507;
     private const string ChaosName = "Chaos";
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
@@ -124,7 +121,7 @@ public sealed class Plugin : IDalamudPlugin
             if (gameObject == null
                 || !gameObject.IsValid()
                 || gameObject is not ICharacter character
-                || !IsConfiguredChaos(gameObject, character))
+                || !IsConfiguredChaos(gameObject))
             {
                 continue;
             }
@@ -136,19 +133,14 @@ public sealed class Plugin : IDalamudPlugin
         RestoreObjectsNotScaledThisScan(scaledObjectIdsThisScan);
     }
 
-    private unsafe bool IsConfiguredChaos(IGameObject gameObject, ICharacter character)
+    private bool IsConfiguredChaos(IGameObject gameObject)
     {
         if (gameObject is not IBattleNpc)
         {
             return false;
         }
 
-        var native = (Character*)character.Address;
-        var modelCharaIdMatches = native != null && (uint)native->ModelContainer.ModelCharaId == ChaosModelCharaId;
-        var baseIdMatches = gameObject.BaseId == ChaosBaseId || gameObject.BaseId == ChaosAlternateBaseId;
-        var nameMatches = string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase);
-
-        return modelCharaIdMatches || baseIdMatches || nameMatches;
+        return string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase);
     }
 
     private unsafe void ApplyConfiguredScale(ICharacter character, float scale)

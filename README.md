@@ -4,7 +4,7 @@ Chibi Chaos is a Dalamud plugin that scales down Chaos in DMU for visibility.
 
 The change is local only. It does not alter hitboxes, mechanics, network data, or anything seen by other players.
 
-The plugin only runs in territory `1363`. Inside that territory, it matches Chaos if any one of these identifiers is present: ModelCharaId `5010`, BaseId `19508` or `19507`, or the name `Chaos`.
+The plugin only runs in territory `1363`. Inside that territory, it matches battle NPCs named `Chaos`.
 
 Scale changes may not refresh on an already-loaded boss model. If Chaos is already present, wipe the pull or re-enter/restart the instance so the boss actor/model is recreated.
 

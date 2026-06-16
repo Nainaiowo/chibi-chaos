@@ -23,6 +23,7 @@ public sealed class Plugin : IDalamudPlugin
     private const uint ChaosModelBaseId = 19507;
     private const uint ExdeathModelCharaId = 303;
     private const uint ExdeathBaseId = 6052;
+    private const string ExdeathName = "Exdeath";
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -176,8 +177,11 @@ public sealed class Plugin : IDalamudPlugin
             return false;
         }
 
-        return (uint)native->ModelContainer.ModelCharaId == ExdeathModelCharaId
-            && gameObject.BaseId == ExdeathBaseId;
+        var modelMatches = (uint)native->ModelContainer.ModelCharaId == ExdeathModelCharaId;
+        var baseMatches = gameObject.BaseId == ExdeathBaseId;
+        var nameMatches = string.Equals(gameObject.Name.TextValue, ExdeathName, StringComparison.OrdinalIgnoreCase);
+
+        return nameMatches || (modelMatches && baseMatches);
     }
 
     private unsafe void ApplyConfiguredScale(ICharacter character, float scale)

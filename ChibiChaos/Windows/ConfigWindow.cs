@@ -31,6 +31,12 @@ public sealed class ConfigWindow : Window, IDisposable
             plugin.SetScale(scale);
         }
 
+        var debugChat = configuration.DebugChat;
+        if (ImGui.Checkbox("Debug chat", ref debugChat))
+        {
+            plugin.SetDebugChat(debugChat);
+        }
+
         ImGui.TextWrapped($"Scale percent: {MathF.Round(configuration.ChaosScale * 100.0f)}%");
         ImGui.TextWrapped("Scale changes may require a wipe or instance re-entry before the already-loaded Chaos model refreshes.");
     }

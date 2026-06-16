@@ -10,6 +10,8 @@ public sealed class Configuration : IPluginConfiguration
 
     public float ChaosScale { get; set; } = 0.55f;
 
+    public bool DebugChat { get; set; }
+
     public void Save()
     {
         Plugin.PluginInterface.SavePluginConfig(this);

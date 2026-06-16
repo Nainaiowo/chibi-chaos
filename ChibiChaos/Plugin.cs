@@ -26,10 +26,13 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
+    [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
     private readonly WindowSystem windowSystem = new("ChibiChaos");
     private readonly ConfigWindow configWindow;
+    private bool debugRecognizedTerritory;
+    private bool debugRecognizedChaos;
 
     public Configuration Configuration { get; }
 
@@ -79,6 +82,18 @@ public sealed class Plugin : IDalamudPlugin
         SaveConfiguration();
     }
 
+    public void SetDebugChat(bool enabled)
+    {
+        Configuration.DebugChat = enabled;
+        if (enabled)
+        {
+            debugRecognizedTerritory = false;
+            debugRecognizedChaos = false;
+        }
+
+        SaveConfiguration();
+    }
+
     private void OnCommand(string command, string args)
     {
         ToggleConfigUi();
@@ -88,6 +103,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (ClientState.TerritoryType != ChaosTerritoryId)
         {
+            UpdateDebugState(inChaosTerritory: false, chaosCount: 0);
             return;
         }
 
@@ -105,6 +121,7 @@ public sealed class Plugin : IDalamudPlugin
             chaosCharacters.Add(character);
         }
 
+        UpdateDebugState(inChaosTerritory: true, chaosCharacters.Count);
         if (chaosCharacters.Count > 0)
         {
             foreach (var character in chaosCharacters)
@@ -145,6 +162,43 @@ public sealed class Plugin : IDalamudPlugin
         {
             Log.Warning(ex, "Could not apply Chaos scale.");
         }
+    }
+
+    private void UpdateDebugState(bool inChaosTerritory, int chaosCount)
+    {
+        var chaosRecognized = inChaosTerritory && chaosCount > 0;
+        if (!Configuration.DebugChat)
+        {
+            debugRecognizedTerritory = inChaosTerritory;
+            debugRecognizedChaos = chaosRecognized;
+            return;
+        }
+
+        if (inChaosTerritory && !debugRecognizedTerritory)
+        {
+            PrintDebug("Recognized Dancing Mad (Ultimate) / Sigmascape V4.0.");
+        }
+        else if (!inChaosTerritory && debugRecognizedTerritory)
+        {
+            PrintDebug("Left Dancing Mad (Ultimate) / Sigmascape V4.0.");
+        }
+
+        if (chaosRecognized && !debugRecognizedChaos)
+        {
+            PrintDebug($"Found Chaos ({chaosCount} matching actor(s)).");
+        }
+        else if (!chaosRecognized && debugRecognizedChaos)
+        {
+            PrintDebug("Chaos no longer recognized.");
+        }
+
+        debugRecognizedTerritory = inChaosTerritory;
+        debugRecognizedChaos = chaosRecognized;
+    }
+
+    private static void PrintDebug(string message)
+    {
+        ChatGui.Print($"[Chibi Chaos] {message}");
     }
 
     private void NormalizeConfiguration()

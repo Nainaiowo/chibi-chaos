@@ -135,11 +135,6 @@ public sealed class Plugin : IDalamudPlugin
 
     private bool IsConfiguredChaos(IGameObject gameObject)
     {
-        if (gameObject is not IBattleNpc)
-        {
-            return false;
-        }
-
         return string.Equals(gameObject.Name.ToString(), ChaosName, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -155,12 +150,13 @@ public sealed class Plugin : IDalamudPlugin
 
             if (!originalObjectScales.ContainsKey(character.GameObjectId))
             {
-                originalObjectScales[character.GameObjectId] = new OriginalScale(native->Scale, native->ModelScale);
+                originalObjectScales[character.GameObjectId] = new OriginalScale(native->Scale, native->ModelScale, native->VfxScale);
             }
 
             var safeScale = ClampScale(scale);
             native->Scale = safeScale;
             native->ModelScale = safeScale;
+            native->VfxScale = safeScale;
         }
         catch (Exception ex)
         {
@@ -244,6 +240,7 @@ public sealed class Plugin : IDalamudPlugin
 
             native->Scale = originalScale.Scale;
             native->ModelScale = originalScale.ModelScale;
+            native->VfxScale = originalScale.VfxScale;
         }
         catch (Exception ex)
         {
@@ -261,5 +258,5 @@ public sealed class Plugin : IDalamudPlugin
         return Math.Clamp(scale, MinScale, MaxScale);
     }
 
-    private readonly record struct OriginalScale(float Scale, float ModelScale);
+    private readonly record struct OriginalScale(float Scale, float ModelScale, float VfxScale);
 }

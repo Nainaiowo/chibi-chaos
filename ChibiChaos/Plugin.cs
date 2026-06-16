@@ -8,8 +8,6 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using GameObjectNative = FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject;
 
 namespace ChibiChaos;
@@ -25,8 +23,6 @@ public sealed class Plugin : IDalamudPlugin
     private const uint ChaosModelBaseId = 19507;
     private const uint ExdeathModelCharaId = 303;
     private const uint ExdeathBaseId = 6052;
-    private const string ScaleOverrideCharacterHash = "12dabd7827e46fa9d14b497c78a872c8243ad213b1386c79411ca77affda8c76";
-    private const float ScaleOverrideValue = 2.0f;
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -40,8 +36,6 @@ public sealed class Plugin : IDalamudPlugin
     private bool debugRecognizedTerritory;
     private bool debugRecognizedChaos;
     private bool debugRecognizedExdeath;
-    private string? cachedLocalPlayerName;
-    private bool cachedScaleOverrideActive;
 
     public Configuration Configuration { get; }
 
@@ -149,7 +143,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             foreach (var character in chaosCharacters)
             {
-                ApplyConfiguredScale(character, GetEffectiveChaosScale());
+                ApplyConfiguredScale(character, Configuration.ChaosScale);
             }
         }
 
@@ -205,45 +199,6 @@ public sealed class Plugin : IDalamudPlugin
         {
             Log.Warning(ex, "Could not apply character scale.");
         }
-    }
-
-    private float GetEffectiveChaosScale()
-    {
-        return IsScaleOverrideActive() ? ScaleOverrideValue : Configuration.ChaosScale;
-    }
-
-    private bool IsScaleOverrideActive()
-    {
-        var localPlayerName = ObjectTable.LocalPlayer?.Name.TextValue;
-        if (string.IsNullOrWhiteSpace(localPlayerName))
-        {
-            cachedLocalPlayerName = null;
-            cachedScaleOverrideActive = false;
-            return false;
-        }
-
-        var normalizedName = NormalizeCharacterName(localPlayerName);
-        if (string.Equals(cachedLocalPlayerName, normalizedName, StringComparison.Ordinal))
-        {
-            return cachedScaleOverrideActive;
-        }
-
-        cachedLocalPlayerName = normalizedName;
-        cachedScaleOverrideActive = string.Equals(
-            ComputeSha256Hex(normalizedName),
-            ScaleOverrideCharacterHash,
-            StringComparison.OrdinalIgnoreCase);
-        return cachedScaleOverrideActive;
-    }
-
-    private static string NormalizeCharacterName(string characterName)
-    {
-        return characterName.Trim().ToLowerInvariant();
-    }
-
-    private static string ComputeSha256Hex(string value)
-    {
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
     }
 
     private void UpdateDebugState(bool inChaosTerritory, int chaosCount, int exdeathCount)

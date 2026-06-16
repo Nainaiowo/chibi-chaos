@@ -21,8 +21,10 @@ public sealed class Plugin : IDalamudPlugin
     private const uint ChaosModelCharaId = 5010;
     private const uint ChaosTargetBaseId = 19508;
     private const uint ChaosModelBaseId = 19507;
+    private const float ChaosBaseScale = 1.0f;
     private const uint ExdeathModelCharaId = 303;
     private const uint ExdeathBaseId = 6052;
+    private const float ExdeathBaseScale = 1.7f;
     private const string ExdeathName = "Exdeath";
 
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
@@ -144,7 +146,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             foreach (var character in chaosCharacters)
             {
-                ApplyConfiguredScale(character, Configuration.ChaosScale);
+                ApplyConfiguredScale(character, Configuration.ChaosScale, ChaosBaseScale);
             }
         }
 
@@ -152,7 +154,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             foreach (var character in exdeathCharacters)
             {
-                ApplyConfiguredScale(character, Configuration.ExdeathScale);
+                ApplyConfiguredScale(character, Configuration.ExdeathScale, ExdeathBaseScale);
             }
         }
     }
@@ -184,7 +186,7 @@ public sealed class Plugin : IDalamudPlugin
         return nameMatches || (modelMatches && baseMatches);
     }
 
-    private unsafe void ApplyConfiguredScale(ICharacter character, float scale)
+    private unsafe void ApplyConfiguredScale(ICharacter character, float scale, float baseScale)
     {
         try
         {
@@ -194,7 +196,7 @@ public sealed class Plugin : IDalamudPlugin
                 return;
             }
 
-            var safeScale = ClampScale(scale);
+            var safeScale = baseScale * ClampScale(scale);
             var gameObjectNative = (GameObjectNative*)character.Address;
             gameObjectNative->Scale = safeScale;
             native->CharacterData.ModelScale = safeScale;

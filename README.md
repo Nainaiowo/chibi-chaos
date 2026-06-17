@@ -19,7 +19,7 @@ Use the window to adjust `Chaos scale` and `Exdeath scale`. To turn Chibi Chaos 
 Add this custom plugin repository URL in Dalamud:
 
 ```text
-https://raw.githubusercontent.com/Nainaiowo/chibi-chaos/refs/heads/main/repo.json
+https://raw.githubusercontent.com/Nainaiowo/IMakeSillyThings/refs/heads/main/repo.json
 ```
 
 Then install `Chibi Chaos` from Dalamud's plugin installer.

@@ -6,6 +6,7 @@
   "Punchline": "Scale down Chaos",
   "Description": "Scales down Chaos in DMU for visibility.",
   "RepoUrl": "https://github.com/Nainaiowo/chibi-chaos",
+  "IconUrl": "https://raw.githubusercontent.com/Nainaiowo/chibi-chaos/main/assets/icon.png",
   "ApplicableVersion": "any",
   "Tags": [
     "chaos",
